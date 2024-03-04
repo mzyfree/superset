@@ -79,6 +79,10 @@ RUN mkdir -p ${PYTHONPATH} superset/static superset-frontend apache_superset.egg
 COPY --chown=superset:superset setup.py MANIFEST.in README.md ./
 # setup.py uses the version information in package.json
 COPY --chown=superset:superset superset-frontend/package.json superset-frontend/
+
+COPY ./external/flink-jdbc-driver-1.0.0.19-20240301.091214-9.jar /app/
+COPY ./external/sqlalchemy_jdbcapi-1.2.2 /app/sqlalchemy_jdbcapi-1.2.2
+
 RUN --mount=type=bind,target=./requirements/local.txt,src=./requirements/local.txt \
     --mount=type=bind,target=./requirements/development.txt,src=./requirements/development.txt \
     --mount=type=bind,target=./requirements/base.txt,src=./requirements/base.txt \
@@ -92,6 +96,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -e . \
     && flask fab babel-compile --target superset/translations \
     && chown -R superset:superset superset/translations
+
+RUN tar czvf sqlalchemy_jdbcapi-1.2.2.tar.gz sqlalchemy_jdbcapi-1.2.2/ \
+    && pip install sqlalchemy_jdbcapi-1.2.2.tar.gz
 
 COPY --chmod=755 ./docker/run-server.sh /usr/bin/
 USER superset
