@@ -76,6 +76,11 @@ RUN mkdir -p ${PYTHONPATH} superset/static superset-frontend apache_superset.egg
     && chown -R superset:superset ./* \
     && rm -rf /var/lib/apt/lists/*
 
+RUN touch /etc/apt/sources.list \
+    && echo 'deb http://deb.debian.org/debian/ sid main' > /etc/apt/sources.list \
+    && apt-get update -qq \
+    && apt-get install -yqq openjdk-8-jdk
+
 COPY --chown=superset:superset setup.py MANIFEST.in README.md ./
 # setup.py uses the version information in package.json
 COPY --chown=superset:superset superset-frontend/package.json superset-frontend/
@@ -92,13 +97,12 @@ RUN --mount=type=bind,target=./requirements/local.txt,src=./requirements/local.t
 COPY --chown=superset:superset --from=superset-node /app/superset/static/assets superset/static/assets
 ## Lastly, let's install superset itself
 COPY --chown=superset:superset superset superset
+
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -e . \
+    && pip install /app/sqlalchemy_jdbcapi-1.2.2 \
     && flask fab babel-compile --target superset/translations \
     && chown -R superset:superset superset/translations
-
-RUN tar czvf sqlalchemy_jdbcapi-1.2.2.tar.gz sqlalchemy_jdbcapi-1.2.2/ \
-    && pip install sqlalchemy_jdbcapi-1.2.2.tar.gz
 
 COPY --chmod=755 ./docker/run-server.sh /usr/bin/
 USER superset

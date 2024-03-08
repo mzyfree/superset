@@ -1,4 +1,4 @@
 [sqlalchemy.dialects]
+jdbcapi.flinkjdbc = sqlalchemy_jdbcapi.flinkjdbc:FlinkJDBCDialect
 jdbcapi.oraclejdbc = sqlalchemy_jdbcapi.oraclejdbc:OracleJDBCDialect
 jdbcapi.pgjdbc = sqlalchemy_jdbcapi.pgjdbc:PGJDBCDialect
-jdbcapi.flinkjdbc = sqlalchemy_jdbcapi.flinkjdbc:FlinkJDBCDialect
