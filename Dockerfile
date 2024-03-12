@@ -79,7 +79,8 @@ RUN mkdir -p ${PYTHONPATH} superset/static superset-frontend apache_superset.egg
 RUN touch /etc/apt/sources.list \
     && echo 'deb http://deb.debian.org/debian/ sid main' > /etc/apt/sources.list \
     && apt-get update -qq \
-    && apt-get install -yqq openjdk-8-jdk
+    && apt-get install -yqq openjdk-8-jdk \
+    && apt-get install -yqq vim
 
 COPY --chown=superset:superset setup.py MANIFEST.in README.md ./
 # setup.py uses the version information in package.json

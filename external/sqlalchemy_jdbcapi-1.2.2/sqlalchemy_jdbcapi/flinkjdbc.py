@@ -1,5 +1,6 @@
 from abc import ABC
 from contextlib import closing
+from typing import (Any, Dict)
 from typing import List
 
 from sqlalchemy import util, types
@@ -9,7 +10,6 @@ from sqlalchemy.sql import sqltypes
 from sqlalchemy.types import TypeEngine
 
 from .base import MixedBinary, BaseDialect
-from typing import (Any, Dict)
 
 colspecs = util.update_copy(
     DefaultDialect.colspecs, {sqltypes.LargeBinary: MixedBinary},
@@ -72,7 +72,7 @@ class FlinkJDBCDialect(BaseDialect, DefaultDialect, ABC):
         # add driver information
         if not jdbc_url.startswith("jdbc"):
             jdbc_url = f"jdbc:flink://{jdbc_url}"
-        print(jdbc_url)
+        print('use jdbc url is ' + jdbc_url)
         kwargs = {
             "jclassname": self.jdbc_driver_name,
             "url": jdbc_url,
